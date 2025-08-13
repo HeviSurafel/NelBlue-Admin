@@ -9,6 +9,8 @@ import {
   LineChart,
   Line,
   XAxis,
+  Area,
+  AreaChart,
   YAxis,
   CartesianGrid,
   Tooltip,
@@ -53,19 +55,19 @@ function Dashboard() {
       </div>
       <div className="w-[902px] h-[100px] absolute top-[143px] left-[326px]  rounded-[10px] flex gap-[10px]">
         <div className="w-[218px] h-[100px]  rounded-[10px]  flex items-center justify-between px-[18px] py-[28px] border border-[#12121280]/50 ">
-          <div className="flex items-center justify-center w-[30px] h-[30px] rounded-full bg-[#014F8E] ">
+          <div className="flex items-center justify-center w-[30px] h-[30px] rounded-[10px] bg-[#014F8E] ">
             <Icon
               icon={dollarIcon}
               className="text-[#ffffff]"
-              width="30"
-              height="30"
+              width="20"
+              height="20"
             />
           </div>
 
           {/* Right side content */}
           <div className="w-[114px] h-[50px] flex flex-col  justify-start ">
-            <span className=" text-[25px]  font-semibold w-[114px] h-[20px] ">
-              $1,250
+            <span className=" text-[25px]  font-semibold w-[114px] h-[20px ">
+              $15,000
             </span>
             <span className="w-[84px] h-[20px]  text-gray-500">Revenue</span>
           </div>
@@ -75,8 +77,8 @@ function Dashboard() {
             <Icon
               icon="hugeicons:loading-03"
               className="text-[#ffffff]"
-              width="30"
-              height="30"
+              width="20"
+              height="20"
             />
           </div>
 
@@ -93,8 +95,8 @@ function Dashboard() {
             <Icon
               icon="mingcute:check-fill"
               className="text-[#ffffff]"
-              width="30"
-              height="30"
+              width="20"
+              height="20"
             />
           </div>
 
@@ -111,8 +113,8 @@ function Dashboard() {
             <Icon
               icon="proicons:cancel"
               className="text-[#ffffff]"
-              width="30"
-              height="30"
+              width="20"
+              height="20"
             />
           </div>
 
@@ -147,37 +149,51 @@ function Dashboard() {
           {/* Chart Section */}
           <div className="w-[500px] h-[189px]">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
+              <AreaChart
                 data={data}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <defs>
+                  <linearGradient id="colorTasks" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#67BD8C" stopOpacity={0.8} />
+                    <stop offset="100%" stopColor="#E1E1E1" stopOpacity={0.9} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#FFFFFF" />
                 <XAxis dataKey="day" />
                 <YAxis />
-                <Tooltip />
-                <Line
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid #E1E1E1",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                />
+                <Area
                   type="monotone"
                   dataKey="tasks"
-                  stroke="#014F8E"
+                  stroke="#67BD8C"
                   strokeWidth={3}
-                  dot={false}
+                  fillOpacity={1}
+                  fill="url(#colorTasks)"
                 />
-              </LineChart>
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Right: New User Card */}
-        <div className="w-[323px] h-[304px] border border-[#12121280]/50 flex flex-col">
+        <div className="w-[323px] h-[304px] border border-[#12121280]/50 flex flex-col rounded-[10px] stroke-[121212]/50">
           {/* Title */}
-          <div className="flex justify-between py-6 px-4">
+          <div className="flex justify-between py-4 px-4">
             <h2 className="font-semibold ">New User</h2>
             <span>See All</span>
           </div>
 
           {/* Content */}
           <div className="mx-[16px] my-[10px] ">
-            <div className="flex items-center justify-between border rounded-[5px] border-[#12121280]/50 p-[10px]">
+            <div className="flex items-center justify-between border rounded-[5px] stroke-[#12121280]/50  p-[10px]">
               {/* Image + Name/Role */}
               <div className="flex items-center">
                 <img
@@ -195,7 +211,7 @@ function Dashboard() {
 
               {/* Status + Time */}
               <div className="text-right">
-                <p className="text-[#319F43]  text-[8px] font-medium">
+                <p className="text-[#319F43]  text-[10px] font-medium">
                   Approved
                 </p>
                 <p className="text-[8px] text-[#121212]/30">10 min ago</p>
@@ -203,7 +219,7 @@ function Dashboard() {
             </div>
           </div>
           <div className="mx-[16px] my-[10px] ">
-            <div className="flex items-center justify-between border rounded-[5px] border-[#12121280]/50 p-[10px]">
+            <div className="flex items-center justify-between border rounded-[5px] stroke-[#12121280]/50 p-[10px]">
               {/* Image + Name/Role */}
               <div className="flex items-center">
                 <img
@@ -221,7 +237,7 @@ function Dashboard() {
 
               {/* Status + Time */}
               <div className="text-right">
-                <p className="text-[#319F43]  text-[8px] font-medium">
+                <p className="text-[#319F43] text-[10px] font-medium">
                   Approved
                 </p>
                 <p className="text-[8px] text-[#121212]/30">10 min ago</p>
@@ -229,7 +245,7 @@ function Dashboard() {
             </div>
           </div>
           <div className="mx-[16px] my-[10px] ">
-            <div className="flex items-center justify-between border rounded-[5px] border-[#12121280]/50 p-[10px]">
+            <div className="flex items-center justify-between border rounded-[5px] stroke-[#12121280]/50 p-[10px]">
               {/* Image + Name/Role */}
               <div className="flex items-center">
                 <img
@@ -247,7 +263,7 @@ function Dashboard() {
 
               {/* Status + Time */}
               <div className="text-right">
-                <p className="text-[#319F43]  text-[8px] font-medium">
+                <p className="text-[#319F43]  text-[10px] font-medium">
                   Approved
                 </p>
                 <p className="text-[8px] text-[#121212]/30">10 min ago</p>
@@ -256,62 +272,54 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="absolute w-[900px] h-[263px] left-[325px] top-[597px] border rounded-[6px] overflow-auto p-4">
+      <div className="absolute w-[900px] h-[251px] left-[325px] top-[597px] border rounded-[6px] overflow-visible">
         {/* Title */}
-        <h2 className="text-[20px] font-semibold mb-4">Project</h2>
-
+        <h2 className="text-[20px] font-semibold relative left-[45px] top-[20px]">Project</h2>
         {/* Table */}
-        <table className="w-full table-auto text-left">
+        <table className="w-full table-auto text-left border-separate border-spacing-y-3 relative left-0 top-[43px]">
           {/* Table Head */}
-          <thead className="bg-[#F5F5F5] w-[898px] h-[64px] text-sm font-semibold">
+          <thead className="bg-[#F5F5F5] h-[64px] text-sm font-semibold">
             <tr>
-              <th className="text-center font-semibold text-[14px] w-[56px] h-[21.18420982360845px]">
+              <th className="text-center font-semibold text-[14px] w-[56px] h-[21px]">
                 Client
               </th>
-              <th className="text-center font-semibold text-[14px] w-[42px] h-[21.1842098236084px]">
+              <th className="text-center font-semibold text-[14px] w-[42px] h-[21px]">
                 Task
               </th>
               <th className="text-center font-semibold text-[14px]">Date</th>
               <th className="text-center font-semibold text-[14px]">Time</th>
               <th className="text-center font-semibold text-[14px]">Amount</th>
               <th className="text-center font-semibold text-[14px]">Status</th>
-             
             </tr>
           </thead>
 
           {/* Table Body */}
-          <tbody className="w-[883px] h-[85px] ">
-            <tr className="border-t text-sm border-2">
-              {/* Client with image and subtext */}
-              <td className="px-4 py-2">
-                <div className="flex items-start gap-2">
+          <tbody>
+            <tr className="text-sm text-center bg-[#E1E1E1] rounded-md">
+              <td className="px-4 py-2 w-2/6">
+                <div className="flex items-center justify-center gap-2">
                   <img
-                    src={image} // Replace with actual image path
+                    src={image}
                     alt="Jonas Blong"
                     className="w-[32px] h-[32px] rounded-full border"
                   />
-                  <div>
-                    <p className="text-sm">Jonas Blong</p>
+                  <div className="text-left flex flex-col">
+                    <p className="text-md text-[16px]">Jonas Blong</p>
                     <p className="text-xs text-gray-500">Tesla: Truck20144</p>
                   </div>
                 </div>
               </td>
 
-              {/* Task with two lines */}
-              <td className="px-4 py-2">
-                <div>
-                  <p className="text-sm boder border-l-[#023AA2]">Brake Pad Servicing</p>
-                  <p className="text-xs text-gray-500">Gear oil maintenance</p>
-                </div>
+              <td className="px-4 py-2 w-2/6">
+                <p className="text-md border-l border-[#023AA2]">Brake Pad Servicing</p>
+                <p className="text-md border-l border-[#023AA2]">Gear oil maintenance</p>
               </td>
-
-              <td className="px-4 py-2">25/03/2025</td>
-              <td className="px-4 py-2">3PM</td>
-              <td className="px-4 py-2">$500</td>
-              <td className="px-4 py-2 text-green-600 font-medium">
+              <td className="px-4 py-2 w-1/6">25/03/2025</td>
+              <td className="px-4 py-2 w-1/6">3PM</td>
+              <td className="px-4 py-2 w-1/6">$500</td>
+              <td className="px-4 py-2 w-1/6 text-green-600 font-medium">
                 Completed
               </td>
-             
             </tr>
           </tbody>
         </table>
