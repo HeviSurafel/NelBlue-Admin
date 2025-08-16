@@ -9,39 +9,24 @@ import starIcon from "@iconify-icons/mdi/star";
 import starOutlineIcon from "@iconify-icons/mdi/star-outline";
 import image from "../assets/4c1a900b3b3e49a09cbd22efaee47a0cec00b79a.jpg";
 
-// Dummy feedback data with random messages and client images
-const feedbacks = [
-  {
-    clientName: "Alice",
-    clientImage: image,
-    rating: 5,
-    message: "Great service, very professional!",
-  },
-  {
-    clientName: "Bob",
-    clientImage: image,
-    rating: 4,
-    message: "Timely and efficient work, thanks!",
-  },
-  {
-    clientName: "Charlie",
-    clientImage: image,
-    rating: 5,
-    message: "Highly recommend Jones Stones.",
-  },
-];
-
 function Projects() {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [detailType, setDetailType] = useState(null); // 'project' or 'handyman'
-  const [dropdownIndex, setDropdownIndex] = useState(null); // Which row dropdown is open
-  const [tab, setTab] = useState("services"); // for handyman modal tabs
-
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [dropdownIndex, setDropdownIndex] = useState(null);
+  const [showClientDetails, setShowClientDetails] = useState(false);
   const dropdownRef = useRef();
 
   const data = [
     {
       client: "Jonas Blong",
+      clientDetails: {
+        name: "Jonas Blong",
+        category: "Car",
+        vehicleType: "Tesla",
+        model: "Truck345674",
+        address: "35 home avenue, canada",
+        phone: "+234 7890543",
+        email: "JonasBlong@gmail.com",
+      },
       task: "Brake Pad Servicing",
       date: "25/03/2025",
       time: "3PM",
@@ -58,16 +43,20 @@ function Projects() {
         phone: "+1 738 4896 5432",
         address: "James street Canada",
         email: "Jonestens@gmail.com",
-        services: [
-          { name: "Brake Pad", price: "$200" },
-          { name: "Brake Pad", price: "$200" },
-          { name: "Brake Pad", price: "$200" },
-          { name: "Brake Pad", price: "$200" },
-        ],
+        services: ["Brake Pad Servicing", "Gear oil maintenance"],
       },
     },
     {
       client: "Tesla: Truck20144",
+      clientDetails: {
+        name: "Tesla Company",
+        category: "Cars",
+        vehicleType: "Tesla Semi",
+        model: "Truck20144",
+        address: "1 Tesla Road, Austin, TX",
+        phone: "+1 555 789 1234",
+        email: "fleet@tesla.com",
+      },
       task: "Gear oil maintenance",
       date: "26/03/2025",
       time: "11AM",
@@ -84,10 +73,7 @@ function Projects() {
         phone: "+1 555 123 4567",
         address: "Main street, NY",
         email: "janesmith@example.com",
-        services: [
-          { name: "Oil Change", price: "$100" },
-          { name: "Electrical Repair", price: "$150" },
-        ],
+        services: ["Oil Change", "Electrical Repair"],
       },
     },
   ];
@@ -110,19 +96,23 @@ function Projects() {
     }
   };
 
-  const openDetails = (user, type) => {
-    setSelectedUser(user);
-    setDetailType(type);
+  const openProjectDetails = (project) => {
+    setSelectedProject(project);
+    setShowClientDetails(false);
     setDropdownIndex(null);
-    if (type === "handyman") setTab("services");
+  };
+
+  const openClientDetails = (project) => {
+    setSelectedProject(project);
+    setShowClientDetails(true);
+    setDropdownIndex(null);
   };
 
   const closeDetails = () => {
-    setSelectedUser(null);
-    setDetailType(null);
+    setSelectedProject(null);
+    setShowClientDetails(false);
   };
 
-  // Helper to render rating stars
   const renderStars = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -142,12 +132,12 @@ function Projects() {
   };
 
   return (
-    <div>
+    <div className="">
       {/* Header */}
       <div className="absolute left-[325px] top-[55px] w-[918px] h-[49px] overflow-hidden">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
-            <h2 className="font-semibold text-[40px]">Users</h2>
+            <h2 className="font-semibold text-[40px]">Projects</h2>
           </div>
           <div className="w-[264px] h-[35px]">
             <div className="flex space-x-4 items-center">
@@ -171,7 +161,7 @@ function Projects() {
       <div className="absolute left-[917px] top-[227px] w-[286px] h-[40px] flex items-center border border-[#121212BF]/75 rounded-[8px] px-3">
         <input
           type="text"
-          placeholder="Search Professional"
+          placeholder="Search Projects"
           className="w-full outline-none text-sm"
         />
         <Icon
@@ -183,12 +173,9 @@ function Projects() {
       </div>
 
       {/* Table */}
-      <div className="relative left-[40px] top-[294px] w-[914px] h-[511px] border rounded-[5px] overflow-auto">
-        <table
-          className="w-full text-left"
-          style={{ borderCollapse: "separate", borderSpacing: "0 13px" }}
-        >
-          <thead className="bg-[#F1F0F0] w-[898px] h-[64px] text-sm font-semibold">
+      <div className="relative left-[40px] top-[294px] w-[914px]">
+        <table className="w-full table-auto text-left border-separate border-spacing-y-3">
+          <thead className="bg-[#F5F5F5] h-[64px] text-sm font-semibold">
             <tr>
               <th className="text-center font-semibold text-[14px]">Client</th>
               <th className="text-center font-semibold text-[14px]">Task</th>
@@ -200,25 +187,42 @@ function Projects() {
             </tr>
           </thead>
 
-          <tbody className="w-[883px] h-[85px] bg-white text-center">
+          <tbody>
             {data.map((item, idx) => (
-              <tr key={idx} className="border bg-[#E1E1E140]">
-                <td className="w-[168px] h-[39px] p-6">
-                  <div className="flex items-center gap-2 pl-5">
+              <tr
+                key={idx}
+                className="text-sm text-center bg-[#E1E1E1] rounded-md"
+              >
+                <td className="px-4 py-2">
+                  <div
+                    className="flex items-center justify-center gap-2 cursor-pointer"
+                    onClick={() => openClientDetails(item)}
+                  >
                     <img
-                      src={item.image}
+                      src={image}
                       alt={item.client}
-                      className="w-[41px] h-[39px] rounded-full border"
+                      className="w-[32px] h-[32px] rounded-full border"
                     />
-                    <p className="text-md text-[16px]">{item.client}</p>
+                    <div className="text-left flex flex-col">
+                      <p className="text-md text-[16px]">
+                        {item.client.split(":")[0]}
+                      </p>
+                      {item.client.includes(":") && (
+                        <p className="text-xs text-gray-500">
+                          {item.client.split(":")[1]}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </td>
-                <td className="px-4 py-2">{item.task}</td>
+                <td className="px-4 py-2">
+                  <p className="border-l border-[#023AA2]">{item.task}</p>
+                </td>
                 <td className="px-4 py-2">{item.date}</td>
                 <td className="px-4 py-2">{item.time}</td>
                 <td className="px-4 py-2">{item.amount}</td>
                 <td
-                  className={`px-4 py-2 font-semibold ${
+                  className={`px-4 py-2 font-medium ${
                     item.status === "Completed"
                       ? "text-green-600"
                       : "text-yellow-600"
@@ -226,32 +230,30 @@ function Projects() {
                 >
                   {item.status}
                 </td>
-                <td className="relative px-4 py-2 cursor-pointer">
+                <td className="relative px-4 py-2">
                   <Icon
                     icon={dotsVertical}
                     width="24"
                     height="24"
+                    className="cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setDropdownIndex(dropdownIndex === idx ? null : idx);
+                      toggleDropdown(idx);
                     }}
                   />
                   {dropdownIndex === idx && (
                     <div
                       ref={dropdownRef}
-                      className="absolute right-0 mt-1 bg-white border rounded shadow-lg z-50 w-[180px]"
+                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10"
                     >
                       <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-200"
-                        onClick={() => openDetails(item, "project")}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openProjectDetails(item);
+                        }}
                       >
                         View Project Details
-                      </button>
-                      <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-200"
-                        onClick={() => openDetails(item, "handyman")}
-                      >
-                        View Handyman Details
                       </button>
                     </div>
                   )}
@@ -262,176 +264,226 @@ function Projects() {
         </table>
       </div>
 
-      {/* Project Details Modal */}
-      {selectedUser && detailType === "project" && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[400px] max-h-[90vh] overflow-auto">
-            <h3 className="text-xl font-semibold mb-4">Project Details</h3>
-            <img
-              src={selectedUser.image}
-              alt={selectedUser.client}
-              className="w-20 h-20 rounded-full mx-auto border mb-4"
-            />
-            <p>
-              <strong>Client:</strong> {selectedUser.client}
-            </p>
-            <p>
-              <strong>Task:</strong> {selectedUser.task}
-            </p>
-            <p>
-              <strong>Date:</strong> {selectedUser.date}
-            </p>
-            <p>
-              <strong>Time:</strong> {selectedUser.time}
-            </p>
-            <p>
-              <strong>Amount:</strong> {selectedUser.amount}
-            </p>
-            <p>
-              <strong>Status:</strong> {selectedUser.status}
-            </p>
-            <button
-              onClick={closeDetails}
-              className="mt-4 px-4 py-2 bg-[#014F8E] text-white rounded hover:opacity-80"
-            >
-              Close
-            </button>
+      {/* Client Details Modal - Only shown when clicking client name */}
+      {selectedProject && showClientDetails && (
+        <div className="fixed inset-0  bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[500px]">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold">Client Details</h3>
+              <button
+                onClick={closeDetails}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Client Header Section */}
+            <div className="flex items-center gap-4 mb-6">
+              <img
+                src={image}
+                alt={selectedProject.clientDetails.name}
+                className="w-16 h-16 rounded-full border-2 border-gray-200"
+              />
+              <div>
+                <h4 className="text-lg font-semibold">
+                  {selectedProject.clientDetails.name}
+                </h4>
+                <p className="text-sm text-gray-500">Client</p>
+              </div>
+            </div>
+
+            {/* Client Details Grid */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    Categories
+                  </p>
+                  <p className="text-sm">
+                    {selectedProject.clientDetails.category}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    Vehicle Type
+                  </p>
+                  <p className="text-sm">
+                    {selectedProject.clientDetails.vehicleType}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    Model
+                  </p>
+                  <p className="text-sm">
+                    {selectedProject.clientDetails.model}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 mb-1">
+                    Phone Number
+                  </p>
+                  <p className="text-sm">
+                    {selectedProject.clientDetails.phone}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">
+                  Address
+                </p>
+                <p className="text-sm">
+                  {selectedProject.clientDetails.address}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Email</p>
+                <p className="text-sm text-blue-600">
+                  {selectedProject.clientDetails.email}
+                </p>
+              </div>
+            </div>
+
+           
           </div>
         </div>
       )}
 
-      {/* Handyman Details Modal */}
-      {/* Handyman Details Modal */}
-      {selectedUser && detailType === "handyman" && (
-        <div className=" inset-0 w-[834px] h-[616px] absolute top-[142px] left-[342px] bg-opacity-40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto">
-            {/* Header */}
-            <div
-              className="flex items-center p-4 border-b"
-              style={{
-                position: "absolute",
-                width: "702px",
-                height: "122px",
-                left: "calc(50% - 702px / 2 + 118px)",
-                top: "calc(50% - 122px / 2 - 125px)",
-                background: "rgba(225, 225, 225, 0.25)",
-                borderRadius: "10px",
-              }}
-            >
-              <img
-                src={selectedUser.handyman.image}
-                alt={selectedUser.handyman.name}
-                className="w-[76px] h-[76px] rounded-full border mr-4"
-              />
-              <div>
-                <h3 className="text-2xl font-semibold">
-                  {selectedUser.handyman.name}
-                </h3>
-                <div className="flex mt-1">
-                  {renderStars(selectedUser.handyman.rating)}
-                </div>
-              </div>
-            </div>
-
-            {/* Main content flex container */}
-            <div className="flex p-4 space-x-8">
-              {/* Left column with info */}
-              <div className="flex-1 space-y-2 border-r pr-8">
-                <p>
-                  <strong>Specialization:</strong>{" "}
-                  {selectedUser.handyman.specialization.join(", ")}
-                </p>
-                <p>
-                  <strong>Availability:</strong>{" "}
-                  {selectedUser.handyman.availabilityDays}
-                </p>
-                <p>
-                  <strong>Hours:</strong>{" "}
-                  {selectedUser.handyman.availabilityHours}
-                </p>
-                <p>
-                  <strong>Contact Phone Number:</strong>{" "}
-                  {selectedUser.handyman.phone}
-                </p>
-                <p>
-                  <strong>Address:</strong> {selectedUser.handyman.address}
-                </p>
-                <p>
-                  <strong>Email:</strong> {selectedUser.handyman.email}
-                </p>
-              </div>
-
-              {/* Right column with tabs */}
-              <div className="flex-1 flex flex-col">
-                <div className="flex border-b mb-4">
-                  <button
-                    className={`mr-4 pb-2 ${
-                      tab === "services"
-                        ? "border-b-2 border-blue-600 font-semibold"
-                        : "text-gray-600"
-                    }`}
-                    onClick={() => setTab("services")}
-                  >
-                    Services
-                  </button>
-                  <button
-                    className={`pb-2 ${
-                      tab === "feedback"
-                        ? "border-b-2 border-blue-600 font-semibold"
-                        : "text-gray-600"
-                    }`}
-                    onClick={() => setTab("feedback")}
-                  >
-                    Feedback
-                  </button>
-                </div>
-
-                {/* Services Tab */}
-                {tab === "services" && (
-                  <div className="overflow-auto max-h-[300px]">
-                    {selectedUser.handyman.services.map((service, idx) => (
-                      <div
-                        key={idx}
-                        className="flex justify-between border-b py-2 text-gray-700"
-                      >
-                        <span>{service.name}</span>
-                        <span className="font-semibold">{service.price}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Feedback Tab */}
-                {tab === "feedback" && (
-                  <div className="overflow-auto max-h-[300px] space-y-4">
-                    {feedbacks.map((fb, idx) => (
-                      <div key={idx} className="flex gap-4 items-center">
-                        <img
-                          src={fb.clientImage}
-                          alt={fb.clientName}
-                          className="w-12 h-12 rounded-full border"
-                        />
-                        <div>
-                          <div className="flex items-center mb-1">
-                            <strong className="mr-2">{fb.clientName}</strong>
-                            <div>{renderStars(fb.rating)}</div>
-                          </div>
-                          <p className="text-gray-600 text-sm">{fb.message}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="p-4 border-t flex justify-end">
+      {/* Project Details Modal - Only shown when clicking "View Details" in dropdown */}
+      {selectedProject && !showClientDetails && (
+        <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-[500px]">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold">Project Details</h3>
               <button
                 onClick={closeDetails}
-                className="px-4 py-2 bg-[#014F8E] text-white rounded hover:opacity-80"
+                className="text-gray-500 hover:text-gray-700"
               >
-                Close
+                ✕
               </button>
+            </div>
+
+            {/* Client Info Box */}
+            <div className="w-full h-[85px] bg-[#F5F5F5] p-4 rounded-[10px] mb-5">
+              <div className="flex justify-between items-center gap-4">
+                <div className="flex justify-center gap-2 items-center">
+                  <img
+                    src={selectedProject.image}
+                    alt={selectedProject.client}
+                    className="w-[50px] h-[50px] rounded-full border"
+                  />
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      {selectedProject.client.split(":")[0]}
+                    </p>
+                    <p className="font-normal text-[12px]">Client</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm text-black font-semibold">
+                    {selectedProject.client.includes(":")
+                      ? selectedProject.client.split(":")[0].includes("Tesla")
+                        ? "Tesla"
+                        : ""
+                      : ""}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {selectedProject.client.includes(":")
+                      ? selectedProject.client.split(":")[1]
+                      : ""}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Details Grid */}
+            <div className="flex flex-col gap-2 bg-[#F5F5F5] rounded-[10px]">
+              {/* Mechanic Info */}
+              <div className="w-full flex justify-between items-center gap-4 px-5 py-6">
+                <div className="flex justify-center gap-2 items-center">
+                  <img
+                    src={selectedProject.handyman.image}
+                    alt={selectedProject.handyman.name}
+                    className="w-[50px] h-[50px] rounded-full border"
+                  />
+                  <div className="flex flex-col">
+                    <p className="font-semibold">
+                      {selectedProject.handyman.name}
+                    </p>
+                    <p className="font-normal text-[12px]">Mechanic</p>
+                  </div>
+                </div>
+                <div className="flex justify-evenly items-center gap-3 bg-[#C4D9FF]/55 px-3 py-1 rounded">
+                  {selectedProject.handyman.specialization.map(
+                    (spec, index) => (
+                      <p key={index} className="text-sm text-black">
+                        {spec}
+                      </p>
+                    )
+                  )}
+                </div>
+              </div>
+              <hr className="w-[401px] mx-auto bg-[#000000]/50" />
+
+              {/* Project Details */}
+              <div className="grid grid-cols-3 gap-4 mb-6 px-5 py-6">
+                <div>
+                  <p className="text-sm text-gray-500">Date</p>
+                  <p className="text-[14px]">{selectedProject.date}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Payment Plan</p>
+                  <p className="text-[14px]">Milestone</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Service Fee</p>
+                  <p className="text-[14px]">{selectedProject.amount}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Time</p>
+                  <p className="text-[14px]">{selectedProject.time}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Payment Method</p>
+                  <p className="text-[14px]">Card</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p
+                    className={`font-medium ${
+                      selectedProject.status === "Completed"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    {selectedProject.status}
+                  </p>
+                </div>
+              </div>
+              <hr className="w-[401px] mx-auto bg-[#000000]/50" />
+
+              {/* Services Section */}
+              <div className="px-5 py-6 bg-[#F5F5F5]">
+                <p className="text-sm font-semibold mb-2 text-[#121212]">
+                  Services
+                </p>
+                <ul className="space-y-2">
+                  {selectedProject.handyman.services.map((service, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center px-2 border-l-2 border-[#023AA2]"
+                    >
+                      <span>{service}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
