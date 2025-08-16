@@ -30,7 +30,7 @@ function Dashboard() {
 
   return (
     <div className="w-full h-screen">
-      <div className="absolute left-[325px] top-[55px] w-[918px] h-[63px] overflow-hidden">
+      <div className="absolute left-[280px]  top-[55px] w-[918px] h-[63px] overflow-hidden">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <h2 className="font-semibold text-[40px]">Dashboard</h2>
@@ -53,7 +53,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="w-[902px] h-[100px] absolute top-[143px] left-[326px]  rounded-[10px] flex gap-[10px]">
+      <div className="w-[902px] h-[100px] absolute top-[143px] left-[280px]  rounded-[10px] flex gap-[10px]">
         <div className="w-[218px] h-[100px]  rounded-[10px]  flex items-center justify-between px-[18px] py-[28px] border border-[#12121280]/50 ">
           <div className="flex items-center justify-center w-[30px] h-[30px] rounded-[10px] bg-[#014F8E] ">
             <Icon
@@ -127,7 +127,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="w-[903px] h-[304px] absolute top-[268px] left-[326px] flex gap-4">
+      <div className="w-[903px] h-[304px] absolute top-[268px] left-[280px] flex gap-4">
         {/* Left: Task Progress */}
         <div className="w-[564px] h-[304px] rounded-[10px] border flex flex-col gap-3">
           {/* Header Section */}
@@ -147,7 +147,7 @@ function Dashboard() {
           </div>
 
           {/* Chart Section */}
-          <div className="w-[500px] h-[189px]">
+          <div className="w-[500px] mx-auto h-[189px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
                 data={data}
@@ -272,7 +272,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="absolute w-[900px] h-[251px] left-[325px] top-[597px] border rounded-[6px] overflow-visible">
+      <div className="absolute w-[900px] h-[251px] left-[280px]  top-[597px] border rounded-[6px] overflow-visible">
         {/* Title */}
         <h2 className="text-[20px] font-semibold relative left-[45px] top-[20px]">Project</h2>
         {/* Table */}

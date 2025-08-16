@@ -60,7 +60,7 @@ function Analaytics() {
   return (
     <div className="w-full overflow-x-hidden">
       {/* Header */}
-      <div className="absolute left-[325px] top-[55px] w-[918px] h-[49px] overflow-hidden">
+      <div className="absolute left-[280px]  top-[55px] w-[918px] h-[49px] overflow-hidden">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <h2 className="font-semibold text-[40px]">Analytics</h2>
@@ -84,7 +84,7 @@ function Analaytics() {
       </div>
 
       {/* Main Content */}
-      <div className="w-[903px] h-[304px] absolute top-[170px] left-[326px] flex gap-2">
+      <div className="w-[903px] h-[304px] absolute top-[170px] left-[280px]  flex gap-2">
         {/* Left: Task Progress */}
         <div className="w-[564px] h-[304px] rounded-[10px] border flex flex-col gap-3">
           <div className="flex justify-between items-center w-[495px] h-[30px] mx-[35px] my-[12px]">
@@ -164,7 +164,7 @@ function Analaytics() {
         </div>
       </div>
       {/* Users Line + Bar Chart */}
-      <div className="w-[903px] h-[304px] rounded-[10px] absolute top-[528px] left-[325px] border ">
+      <div className="w-[903px] h-[304px] rounded-[10px] absolute top-[528px] left-[280px] border ">
         <div className="flex justify-between items-center px-[50px] py-[30px]">
           <h2 className="font-semibold  text-[20px] ">Users</h2>
           <span className="flex space-x-6">
